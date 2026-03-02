@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parth M. Nimavat — Attorney at Law</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0e0e0e;
+    --cream: #f5f2ec;
+    --warm-white: #faf9f6;
+    --gold: #b8955a;
+    --gold-light: #d4b07a;
+    --muted: #7a7367;
+    --line: rgba(14,14,14,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--warm-white);
+    color: var(--ink);
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.25s ease;
+    opacity: 0.6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 28px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    mix-blend-mode: normal;
+    background: transparent;
+    transition: background 0.4s ease, padding 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(250,249,246,0.95);
+    backdrop-filter: blur(12px);
+    padding: 18px 60px;
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    font-size: 0.82rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* HERO */
+  .hero {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    background: var(--ink);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 80px 70px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 30% 20%, rgba(184,149,90,0.12) 0%, transparent 60%);
+  }
+  .hero-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(120px, 18vw, 220px);
+    font-weight: 300;
+    color: rgba(255,255,255,0.04);
+    position: absolute;
+    top: -20px; left: -10px;
+    line-height: 1;
+    user-select: none;
+  }
+  .hero-tag {
+    font-size: 0.8rem;
+    font-weight: 300;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 6vw, 88px);
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    margin-bottom: 24px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.9s 0.5s forwards;
+  }
+  .hero-name em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+  .hero-desc {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.9;
+    color: rgba(245,242,236,0.55);
+    max-width: 320px;
+    margin-bottom: 48px;
+    letter-spacing: 0.03em;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.9s 0.7s forwards;
+  }
+  .hero-cta {
+    display: flex; gap: 20px; align-items: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.9s 0.9s forwards;
+  }
+  .btn-primary {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--gold);
+    padding: 14px 32px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--gold-light);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  .btn-primary:hover::before { transform: translateX(0); }
+  .btn-primary span { position: relative; z-index: 1; }
+  .btn-secondary {
+    font-size: 0.82rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,242,236,0.5);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .btn-secondary:hover { color: var(--cream); }
+
+  .hero-right {
+    background: var(--cream);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-right::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 50%, rgba(14,14,14,0.04) 100%);
+  }
+  .hero-pattern {
+    position: absolute; inset: 0;
+    opacity: 0.06;
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--ink) 0, var(--ink) 1px,
+      transparent 1px, transparent 12px
+    );
+  }
+  .hero-emblem {
+    position: relative; z-index: 1;
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 1.2s 1s forwards;
+  }
+  .emblem-circle {
+    width: 220px; height: 220px;
+    border: 1px solid rgba(14,14,14,0.15);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    margin: 0 auto 32px;
+  }
+  .emblem-circle::before {
+    content: '';
+    position: absolute; inset: 12px;
+    border: 1px solid rgba(184,149,90,0.35);
+    border-radius: 50%;
+    animation: rotateSlow 20s linear infinite;
+  }
+  .emblem-circle::after {
+    content: '';
+    position: absolute;
+    width: 4px; height: 4px;
+    background: var(--gold);
+    border-radius: 50%;
+    top: 12px; left: 50%;
+    transform: translateX(-50%);
+    animation: rotateSlow 20s linear infinite;
+  }
+  .emblem-initial {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 80px;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .emblem-initial span { color: var(--gold); }
+  .emblem-text {
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* DIVIDER */
+  .section-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 0 60px;
+  }
+
+  /* ABOUT */
+  .about {
+    padding: 120px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .section-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 400;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    width: 30px; height: 1px;
+    background: var(--gold);
+  }
+  .about-left .section-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(60px, 8vw, 110px);
+    font-weight: 300;
+    color: rgba(14,14,14,0.06);
+    line-height: 1;
+    user-select: none;
+  }
+  .about-left h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 3.5vw, 52px);
+    font-weight: 400;
+    line-height: 1.2;
+    margin-top: -20px;
+  }
+  .about-right p {
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 2;
+    color: #4a453f;
+    margin-bottom: 24px;
+  }
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    margin-top: 50px;
+    border: 1px solid var(--line);
+  }
+  .stat {
+    background: var(--warm-white);
+    padding: 32px 28px;
+    transition: background 0.3s;
+  }
+  .stat:hover { background: var(--cream); }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-num span { color: var(--gold); font-size: 28px; }
+  .stat-label {
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* PRACTICE AREAS */
+  .practice {
+    padding: 100px 60px;
+    background: var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .practice::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(184,149,90,0.08) 0%, transparent 60%);
+  }
+  .practice-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 70px; position: relative;
+  }
+  .practice-header .section-label { color: var(--gold-light); }
+  .practice-header .section-label::before { background: var(--gold-light); }
+  .practice-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 4.5vw, 60px);
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1.15;
+  }
+  .practice-subtitle {
+    font-size: 0.92rem;
+    font-weight: 300;
+    color: rgba(245,242,236,0.45);
+    max-width: 260px;
+    line-height: 1.8;
+    text-align: right;
+  }
+  .practice-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.06);
+  }
+  .practice-card {
+    background: var(--ink);
+    padding: 44px 36px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.4s ease;
+    overflow: hidden;
+  }
+  .practice-card::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--gold);
+    transition: width 0.4s ease;
+  }
+  .practice-card:hover { background: rgba(255,255,255,0.03); }
+  .practice-card:hover::before { width: 100%; }
+  .card-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-bottom: 28px;
+    font-weight: 400;
+  }
+  .card-icon {
+    font-size: 26px;
+    margin-bottom: 18px;
+    opacity: 0.7;
+    filter: grayscale(1) brightness(2);
+  }
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 14px;
+    letter-spacing: 0.02em;
+  }
+  .card-desc {
+    font-size: 0.92rem;
+    font-weight: 300;
+    line-height: 1.85;
+    color: rgba(245,242,236,0.45);
+  }
+  .card-arrow {
+    margin-top: 28px;
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all 0.3s ease;
+  }
+  .practice-card:hover .card-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* PHILOSOPHY */
+  .philosophy {
+    padding: 140px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+  }
+  .philosophy-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 300;
+    line-height: 1.3;
+    color: var(--ink);
+    position: relative;
+    padding-left: 36px;
+  }
+  .philosophy-quote::before {
+    content: '"';
+    position: absolute;
+    left: -8px; top: -20px;
+    font-size: 120px;
+    color: var(--gold);
+    opacity: 0.2;
+    font-family: 'Cormorant Garamond', serif;
+    line-height: 1;
+  }
+  .philosophy-quote em { font-style: italic; color: var(--gold); }
+  .philosophy-right {}
+  .philosophy-right p {
+    font-size: 1.02rem;
+    font-weight: 300;
+    line-height: 2.1;
+    color: #4a453f;
+    margin-bottom: 20px;
+  }
+  .gold-line {
+    width: 60px; height: 2px;
+    background: var(--gold);
+    margin-bottom: 40px;
+  }
+
+  /* CONTACT */
+  .contact {
+    padding: 100px 60px;
+    background: var(--cream);
+    position: relative;
+  }
+  .contact-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .contact h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 4.5vw, 62px);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 28px;
+  }
+  .contact-detail {
+    margin-bottom: 28px;
+  }
+  .contact-detail-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+  .contact-detail-val {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .contact-form {}
+  .form-group {
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    padding: 12px 0;
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.3s;
+    resize: none;
+    letter-spacing: 0.03em;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-bottom-color: var(--gold);
+  }
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: var(--muted);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    font-size: 0.92rem;
+  }
+  .form-group label {
+    position: absolute; top: 0; left: 0;
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transform: translateY(-18px);
+  }
+  .btn-submit {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm-white);
+    background: var(--ink);
+    border: none;
+    padding: 16px 40px;
+    cursor: pointer;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-submit::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+  .btn-submit:hover::before { transform: scaleX(1); }
+  .btn-submit span { position: relative; z-index: 1; }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    padding: 48px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    font-weight: 400;
+    color: var(--cream);
+    letter-spacing: 0.06em;
+  }
+  .footer-logo span { color: var(--gold); }
+  .footer-copy {
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    color: rgba(245,242,236,0.3);
+    font-weight: 300;
+  }
+  .footer-links { display: flex; gap: 28px; }
+  .footer-links a {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(245,242,236,0.35);
+    text-decoration: none;
+    transition: color 0.3s;
+    font-weight: 300;
+  }
+  .footer-links a:hover { color: var(--gold); }
+
+  /* REVEAL ANIMATIONS */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  @keyframes rotateSlow {
+    to { transform: translateX(-50%) rotate(360deg); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--warm-white); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+  /* LINE DECORATION */
+  .vertical-line {
+    position: fixed;
+    left: 30px; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--gold) 30%, var(--gold) 70%, transparent);
+    opacity: 0.15;
+    z-index: 50;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="vertical-line"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">Parth <span>M.</span> Nimavat</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#practice">Practice</a></li>
+    <li><a href="#philosophy">Approach</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-number">P</div>
+    <p class="hero-tag">Attorney at Law &nbsp;·&nbsp; Est. 2010</p>
+    <h1 class="hero-name">Parth <em>M.</em><br>Nimavat</h1>
+    <p class="hero-desc">Providing precise, principled legal counsel with an unwavering commitment to justice and client advocacy.</p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-primary"><span>Schedule a Consultation</span></a>
+      <a href="#practice" class="btn-secondary">Explore Practice →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-pattern"></div>
+    <div class="hero-emblem">
+      <div class="emblem-circle">
+        <div class="emblem-initial">P<span>N</span></div>
+      </div>
+      <div class="emblem-text">Advocate &nbsp;·&nbsp; Counselor &nbsp;·&nbsp; Advisor</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-left">
+    <div class="section-label reveal">About</div>
+    <div class="section-num reveal">01</div>
+    <h2 class="reveal reveal-delay-1">Seasoned<br><em style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold)">Counsel</em><br>You Can Trust</h2>
+  </div>
+  <div class="about-right">
+    <p class="reveal">Parth M. Nimavat brings over a decade of distinguished legal practice, combining deep jurisprudential knowledge with a strategic, client-first philosophy. Educated at the foremost institutions of legal scholarship, he has represented clients across a broad spectrum of complex matters.</p>
+    <p class="reveal reveal-delay-1">His practice is defined by meticulous preparation, clear communication, and the tenacity to pursue optimal outcomes in every matter entrusted to him — whether negotiated at the table or litigated in court.</p>
+    <div class="stats-row reveal reveal-delay-2">
+      <div class="stat">
+        <div class="stat-num">15<span>+</span></div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">500<span>+</span></div>
+        <div class="stat-label">Cases Handled</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">98<span>%</span></div>
+        <div class="stat-label">Client Satisfaction</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PRACTICE AREAS -->
+<section class="practice" id="practice">
+  <div class="practice-header">
+    <div>
+      <div class="section-label reveal">Practice Areas</div>
+      <h2 class="practice-title reveal reveal-delay-1">Areas of<br><em style="font-style:italic">Legal Expertise</em></h2>
+    </div>
+    <p class="practice-subtitle reveal reveal-delay-2">Comprehensive legal services across multiple disciplines, tailored to your unique needs.</p>
+  </div>
+  <div class="practice-grid">
+    <div class="practice-card reveal">
+      <div class="card-num">01</div>
+      <div class="card-title">Corporate & Commercial Law</div>
+      <p class="card-desc">Advising businesses on complex transactions, mergers, acquisitions, contracts, and regulatory compliance with strategic precision.</p>
+      <div class="card-arrow">Learn More →</div>
+    </div>
+    <div class="practice-card reveal reveal-delay-1">
+      <div class="card-num">02</div>
+      <div class="card-title">Civil Litigation</div>
+      <p class="card-desc">Vigorous representation in civil disputes — from pre-litigation strategy through trial and appellate proceedings.</p>
+      <div class="card-arrow">Learn More →</div>
+    </div>
+    <div class="practice-card reveal reveal-delay-2">
+      <div class="card-num">03</div>
+      <div class="card-title">Real Estate Law</div>
+      <p class="card-desc">Comprehensive counsel for property transactions, development, leasing, and resolution of real estate disputes.</p>
+      <div class="card-arrow">Learn More →</div>
+    </div>
+    <div class="practice-card reveal reveal-delay-1">
+      <div class="card-num">04</div>
+      <div class="card-title">Family & Matrimonial</div>
+      <p class="card-desc">Sensitive, experienced guidance through divorce, custody, matrimonial property, and family dispute resolution.</p>
+      <div class="card-arrow">Learn More →</div>
+    </div>
+    <div class="practice-card reveal reveal-delay-2">
+      <div class="card-num">05</div>
+      <div class="card-title">Criminal Defence</div>
+      <p class="card-desc">Principled, strategic defence counsel ensuring your rights are protected at every stage of criminal proceedings.</p>
+      <div class="card-arrow">Learn More →</div>
+    </div>
+    <div class="practice-card reveal reveal-delay-3">
+      <div class="card-num">06</div>
+      <div class="card-title">Arbitration & Mediation</div>
+      <p class="card-desc">Skilled alternative dispute resolution to achieve efficient, cost-effective outcomes without prolonged litigation.</p>
+      <div class="card-arrow">Learn More →</div>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy" id="philosophy">
+  <div>
+    <div class="section-label reveal">Philosophy</div>
+    <blockquote class="philosophy-quote reveal reveal-delay-1">
+      The law is not merely a profession — it is a <em>responsibility</em> to those who seek justice.
+    </blockquote>
+  </div>
+  <div class="philosophy-right reveal reveal-delay-2">
+    <div class="section-label">My Approach</div>
+    <div class="gold-line"></div>
+    <p>Every client who walks through the door carries with them a story, a concern, and a future that deserves to be protected. My approach begins with listening — understanding not just the legal dimensions of a matter, but the human stakes involved.</p>
+    <p>I believe in transparent communication, honest assessment, and strategies tailored to each client's goals. Legal complexity should never be a barrier between you and the outcome you deserve.</p>
+    <p>Above all, I am committed to the highest standards of professional integrity — because the trust you place in your attorney is sacred.</p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div>
+      <div class="section-label reveal">Contact</div>
+      <h2 class="reveal reveal-delay-1">Begin Your<br><em style="font-family:'Cormorant Garamond',serif;font-style:italic">Consultation</em></h2>
+      <p style="font-size:0.98rem;font-weight:300;color:var(--muted);line-height:1.9;margin-bottom:40px;" class="reveal reveal-delay-2">Initial consultations are confidential and conducted with the utmost discretion.</p>
+      <div class="contact-detail reveal reveal-delay-2">
+        <div class="contact-detail-label">Office</div>
+        <div class="contact-detail-val">Chamber No. 12, District Court Complex<br>Ahmedabad, Gujarat — 380001</div>
+      </div>
+      <div class="contact-detail reveal reveal-delay-3">
+        <div class="contact-detail-label">Email</div>
+        <div class="contact-detail-val">parth@nimavatlaw.com</div>
+      </div>
+      <div class="contact-detail reveal reveal-delay-3">
+        <div class="contact-detail-label">Phone</div>
+        <div class="contact-detail-val">+91 98765 43210</div>
+      </div>
+      <div class="contact-detail reveal reveal-delay-4">
+        <div class="contact-detail-label">Hours</div>
+        <div class="contact-detail-val">Monday – Saturday, 10:00 AM – 6:00 PM</div>
+      </div>
+    </div>
+    <div class="contact-form reveal reveal-delay-2">
+      <div class="form-group">
+        <input type="text" placeholder="Your Full Name">
+      </div>
+      <div class="form-group">
+        <input type="email" placeholder="Email Address">
+      </div>
+      <div class="form-group">
+        <input type="text" placeholder="Subject / Nature of Matter">
+      </div>
+      <div class="form-group">
+        <textarea rows="5" placeholder="Briefly describe your legal matter..."></textarea>
+      </div>
+      <button class="btn-submit"><span>Send Message</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Parth <span>M.</span> Nimavat</div>
+  <div class="footer-copy">© 2025 Parth M. Nimavat. All Rights Reserved.</div>
+  <div class="footer-links">
+    <a href="#about">About</a>
+    <a href="#practice">Practice</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+  document.querySelectorAll('a, button, .practice-card, .stat').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
+      ring.style.transform = 'translate(-50%,-50%) scale(1.4)';
+      ring.style.opacity = '1';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+      ring.style.transform = 'translate(-50%,-50%) scale(1)';
+      ring.style.opacity = '0.6';
+    });
+  });
+
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
